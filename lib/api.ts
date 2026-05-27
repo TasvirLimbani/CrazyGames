@@ -107,7 +107,7 @@ async function fetchWithRetry(
 export async function fetchGamesFromAPI(
   categoryId?: number,
   page: number = 1,
-  num: number = 50
+  num: number = 100
 ): Promise<GameMonetizeResponse[]> {
   try {
     const params = new URLSearchParams({
@@ -141,7 +141,7 @@ export async function fetchGamesFromAPI(
 export async function fetchGamesByCategory(
   categoryId: string,
   page: number = 1,
-  num: number = 50
+  num: number = 100
 ): Promise<GameMonetizeResponse[]> {
   const gmCategoryId = categoryMapping[categoryId]
   if (!gmCategoryId) {
@@ -157,7 +157,7 @@ export async function fetchGamesByCategory(
  */
 export async function fetchAllGames(
   page: number = 1,
-  num: number = 50
+  num: number = 100
 ): Promise<GameMonetizeResponse[]> {
   return fetchGamesFromAPI(undefined, page, num)
 }

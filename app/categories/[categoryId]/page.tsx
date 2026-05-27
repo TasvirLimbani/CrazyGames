@@ -1,7 +1,9 @@
 import { Header } from '@/components/layout/Header'
 import { SidebarNav } from '@/components/layout/SidebarNav'
 import { GameGrid } from '@/components/games/GameGrid'
-import { getGamesByCategory, getCategoryById, categories } from '@/lib/mock-data'
+import { getCategoryById, categories } from '@/lib/mock-data'
+import { fetchGamesByCategory } from '@/lib/api'
+import { transformGameMonetizeData } from '@/lib/transform'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -14,12 +16,14 @@ interface CategoryPageProps {
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { categoryId } = await params
   const category = getCategoryById(categoryId)
-  
+
   if (!category) {
     notFound()
   }
 
-  const games = getGamesByCategory(categoryId)
+  // Fetch games from GameMonetize API
+  const apiGames = await fetchGamesByCategory(categoryId)
+  const games = apiGames.map(transformGameMonetizeData)
 
   return (
     <div className="flex flex-col min-h-screen bg-background">

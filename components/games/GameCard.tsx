@@ -30,9 +30,6 @@ export function GameCard({ game }: GameCardProps) {
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
-
-
-
           {/* Badge */}
           {badge && (
             <div className={`absolute top-2 right-2 ${badge.bg} ${badge.text} px-3 py-1 rounded-full text-xs font-bold`}>

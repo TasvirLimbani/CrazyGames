@@ -35,7 +35,9 @@ export default function Home() {
             </section>
           </div>
         </main>
+        
       </div>
+      
     </div>
   )
 }

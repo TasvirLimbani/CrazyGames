@@ -1,113 +1,96 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { HorizontalGameScroll } from './HorizontalGameScroll'
-import { Game, Category } from '@/lib/types'
-import { categories } from '@/lib/mock-data'
-
-interface CategoryWithGames extends Category {
-  games: Game[]
-  loading: boolean
-  page: number
-}
+import Link from 'next/link'
+import Image from 'next/image'
+import { Game } from '@/lib/types'
 
 export function GamesCategorySection() {
-  const [gamesByCategory, setGamesByCategory] = useState<CategoryWithGames[]>(
-    categories.map(cat => ({
-      ...cat,
-      games: [],
-      loading: true,
-      page: 1,
-    }))
-  )
+  const [games, setGames] = useState<Game[]>([])
+  const [loading, setLoading] = useState(true)
 
-  // Fetch initial games
   useEffect(() => {
-    const fetchAllCategories = async () => {
-      const updated = [...gamesByCategory]
-
-      for (let i = 0; i < categories.length; i++) {
-        const category = categories[i]
-
-        try {
-          const response = await fetch(
-            `/api/games?categoryId=${category.id}&page=1&num=8`
-          )
-
-          const games = await response.json()
-
-          updated[i] = {
-            ...category,
-            games,
-            loading: false,
-            page: 1,
-          }
-
-          setGamesByCategory([...updated])
-        } catch (error) {
-          console.error(`Error fetching games for ${category.id}:`, error)
-
-          updated[i] = {
-            ...category,
-            games: [],
-            loading: false,
-            page: 1,
-          }
-
-          setGamesByCategory([...updated])
-        }
+    const fetchGames = async () => {
+      try {
+        const response = await fetch('/api/games?page=1&num=100')
+        const data = await response.json()
+        setGames(data)
+      } catch (error) {
+        console.error('Error fetching games:', error)
+      } finally {
+        setLoading(false)
       }
     }
 
-    fetchAllCategories()
+    fetchGames()
   }, [])
 
-  // Load more games
-  const handleLoadMore = async (categoryId: string) => {
-    try {
-      const category = gamesByCategory.find(cat => cat.id === categoryId)
+const getCardClass = (index: number, total: number) => {
 
-      if (!category) return
+  // FIX ugly last row
+  if (index >= total - 4) {
+    return 'row-span-2'
+  }
 
-      const nextPage = category.page + 1
+  const patterns = [
+    'row-span-2',
+    'row-span-3',
+    'col-span-2 row-span-2',
+    'row-span-2',
+    'row-span-4',
+    'col-span-2 row-span-3',
+    'row-span-2',
+    'row-span-3',
+  ]
 
-      const response = await fetch(
-        `/api/games?categoryId=${categoryId}&page=${nextPage}&num=8`
-      )
+  return patterns[index % patterns.length]
+}
 
-      const newGames = await response.json()
-
-      setGamesByCategory(prev =>
-        prev.map(cat =>
-          cat.id === categoryId
-            ? {
-                ...cat,
-                games: [...cat.games, ...newGames],
-                page: nextPage,
-              }
-            : cat
-        )
-      )
-    } catch (error) {
-      console.error(`Error loading more games for ${categoryId}:`, error)
-    }
+  if (loading) {
+    return (
+      <div className="px-4 py-10 text-center text-white">
+        Loading games...
+      </div>
+    )
   }
 
   return (
-    <div className="space-y-4">
-      {gamesByCategory
-        .filter(cat => cat.games.length > 0 || cat.loading)
-        .map(category => (
-          <div key={category.id} className="max-w-full">
-            <HorizontalGameScroll
-              title={category.name}
-              games={category.games}
-              categoryId={category.id}
-              isLoading={category.loading}
-              onLoadMore={() => handleLoadMore(category.id)}
-            />
-          </div>
+    <div className="px-3 py-5">
+
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 auto-rows-[70px] gap-3 grid-flow-dense">
+
+        {games.map((game: any, index) => (
+          <Link
+            key={game.id || index}
+            href={`/game/${game.id}`}
+           className={`group block ${getCardClass(index, games.length)}`}
+          >
+            <div className="relative h-full w-full overflow-hidden rounded-2xl bg-[#111]">
+
+              {/* IMAGE */}
+              <Image
+                src={game.thumb || game.thumbnail}
+                alt={game.title}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+
+              {/* OVERLAY */}
+              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/40 transition-all duration-300" />
+
+              {/* TITLE */}
+              <div className="absolute bottom-0 left-0 right-0 p-2">
+                <h3 className="text-white text-xs font-medium line-clamp-1">
+                  {game.title}
+                </h3>
+              </div>
+
+            </div>
+          </Link>
         ))}
+
+      </div>
+
     </div>
   )
 }
