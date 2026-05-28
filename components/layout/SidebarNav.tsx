@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { categories } from '@/lib/mock-data'
 import { Gamepad2, Flame, Star, Zap, TrendingUp } from 'lucide-react'
 
@@ -12,37 +12,54 @@ const mainNavItems = [
     label: 'All Games',
     href: '/',
     id: 'all',
+    filter: undefined,
   },
   {
     icon: Flame,
     label: 'Hot',
     href: '/?filter=hot',
     id: 'hot',
+    filter: 'hot',
   },
   {
     icon: Star,
     label: 'Top Picks',
     href: '/?filter=top',
     id: 'top',
+    filter: 'top',
   },
   {
     icon: TrendingUp,
     label: 'New Games',
     href: '/?filter=new',
     id: 'new',
+    filter: 'new',
   },
 ]
 
 export function SidebarNav() {
   const [isHovered, setIsHovered] = useState(false)
   const pathname = usePathname()
-  const isActive = (href: string) => pathname === href || (href === '/' && pathname === '/')
+  const searchParams = useSearchParams()
+  const filter = searchParams?.get('filter') || ''
+
+  const isActive = (href: string, itemFilter?: string) => {
+    if (href === '/') {
+      return pathname === '/' && !filter
+    }
+
+    if (itemFilter) {
+      return pathname === '/' && filter === itemFilter
+    }
+
+    return pathname === href
+  }
 
   return (
     <aside
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`hidden lg:flex flex-col bg-card border-r border-border h-screen sticky top-0 overflow-y-auto transition-all duration-300 ${isHovered ? 'w-64' : 'w-20'
+      className={`hidden lg:flex flex-col bg-card border-r border-border min-h-screen sticky top-0 transition-all duration-300 ${isHovered ? 'w-64' : 'w-20'
         }`}
     >
       {/* Main Navigation */}
@@ -51,15 +68,15 @@ export function SidebarNav() {
         <nav className="space-y-2">
           {mainNavItems.map(item => {
             const Icon = item.icon
-            const active = isActive(item.href)
+            const active = isActive(item.href, item.filter)
             return (
               <Link
                 key={item.id}
                 href={item.href}
                 title={item.label}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${active
-                    ? 'bg-primary/10 text-primary border-l-2 border-primary'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                  ? 'bg-primary/10 text-primary border-l-2 border-primary'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
                   }`}
               >
                 <Icon className="w-5 h-5 flex-shrink-0" />

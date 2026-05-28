@@ -1,4 +1,3 @@
-import { Header } from '@/components/layout/Header'
 import { SidebarNav } from '@/components/layout/SidebarNav'
 import { GameGrid } from '@/components/games/GameGrid'
 import { games } from '@/lib/mock-data'
@@ -10,8 +9,6 @@ export default function WishlistPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Header />
-
       <div className="flex flex-1">
         <SidebarNav />
 

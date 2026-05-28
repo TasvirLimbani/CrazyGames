@@ -1,20 +1,29 @@
-'use client'
+"use client"
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Search, Bell, Heart, User, LogIn, Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 export function Header() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
+  useEffect(() => {
+    const q = searchParams?.get('q') || ''
+    setSearchQuery(q)
+  }, [searchParams])
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
+      setIsSearchOpen(false)
     }
   }
 
@@ -64,47 +73,11 @@ export function Header() {
             </button>
 
             {/* Desktop Actions */}
-            <div className="hidden sm:flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-secondary text-foreground"
-                title="Notifications"
-              >
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full"></span>
-              </Button>
+     
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-secondary text-foreground"
-                title="Wishlist"
-              >
-                <Heart className="w-5 h-5" />
-              </Button>
+    
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-secondary text-foreground"
-                title="Profile"
-              >
-                <User className="w-5 h-5" />
-              </Button>
-            </div>
-
-            {/* Login Button */}
-            <Button
-              asChild
-              className="bg-primary hover:bg-purple-600 text-primary-foreground hidden sm:flex"
-            >
-              <Link href="/auth/login" className="gap-2">
-                <LogIn className="w-4 h-4" />
-                <span className="hidden sm:inline">Log in</span>
-              </Link>
-            </Button>
-
+          
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -137,29 +110,7 @@ export function Header() {
           </form>
         )}
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="sm:hidden mt-4 flex flex-col gap-2 border-t border-border pt-4">
-            <Link
-              href="/profile"
-              className="px-4 py-2 hover:bg-secondary rounded-lg transition-colors text-foreground flex items-center gap-2"
-            >
-              <User className="w-4 h-4" /> Profile
-            </Link>
-            <Link
-              href="/wishlist"
-              className="px-4 py-2 hover:bg-secondary rounded-lg transition-colors text-foreground flex items-center gap-2"
-            >
-              <Heart className="w-4 h-4" /> Wishlist
-            </Link>
-            <Button
-              asChild
-              className="w-full bg-primary hover:bg-purple-600 text-primary-foreground"
-            >
-              <Link href="/auth/login">Log in</Link>
-            </Button>
-          </div>
-        )}
+      
       </div>
     </header>
   )

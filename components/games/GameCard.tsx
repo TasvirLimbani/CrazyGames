@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Game, BadgeType } from '@/lib/types'
-import { Star } from 'lucide-react'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
 
 interface GameCardProps {
   game: Game
@@ -20,51 +20,29 @@ export function GameCard({ game }: GameCardProps) {
   const badge = game.badge ? badgeConfig[game.badge] : null
 
   return (
-    <Link href={`/games/${game.id}`}>
-      <div className="group relative overflow-hidden rounded-lg bg-card hover:shadow-lg transition-shadow duration-300 cursor-pointer w-50 h-30 flex flex-col">
-        {/* Image Container */}
-        <div className="relative w-full h-48 overflow-hidden bg-muted">
+    <Link href={`/game/${game.id}`} className="group block">
+      <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+        <AspectRatio ratio={4 / 3} className="relative overflow-hidden bg-muted">
           <Image
             src={game.thumbnail}
             alt={game.title}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           />
-          {/* Badge */}
+          <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 via-black/20 to-transparent p-3">
+            <h3 className="line-clamp-1 text-sm font-semibold text-white">
+              {game.title}
+            </h3>
+          </div>
+
           {badge && (
-            <div className={`absolute top-2 right-2 ${badge.bg} ${badge.text} px-3 py-1 rounded-full text-xs font-bold`}>
+            <div className={`absolute right-2 top-2 rounded-full px-3 py-1 text-xs font-bold shadow-md ${badge.bg} ${badge.text}`}>
               {badge.label}
             </div>
           )}
-        </div>
 
-        {/* Content */}
-        {/* <div className="p-4 flex-1 flex flex-col">
-          <h3 className="text-foreground font-semibold text-sm line-clamp-2 mb-2 group-hover:text-accent transition-colors">
-            {game.title}
-          </h3> */}
-
-        {/* Rating and Players */}
-        {/* <div className="flex items-center justify-between text-xs text-muted-foreground mb-3 mt-auto">
-            <div className="flex items-center gap-1">
-              <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
-              <span>{game.rating.toFixed(1)}</span>
-            </div>
-            <span>{(game.playCount / 1000).toFixed(0)}K plays</span>
-          </div> */}
-
-        {/* Tags */}
-        {/* <div className="flex flex-wrap gap-1">
-            {game.tags.slice(0, 2).map(tag => (
-              <span
-                key={tag}
-                className="text-xs bg-secondary text-muted-foreground rounded px-2 py-1"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div> */}
+        </AspectRatio>
       </div>
     </Link>
   )

@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
@@ -15,8 +17,8 @@ export const metadata: Metadata = {
     initialScale: 1,
     maximumScale: 1,
     userScalable: false,
-    themeColor: '#7c3aed',
   },
+  themeColor: '#7c3aed',
   icons: {
     icon: [
       {
@@ -44,7 +46,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark bg-background">
       <body className="font-sans antialiased bg-background text-foreground">
-        {children}
+        <Header />
+        <main className="min-h-screen">{children}</main>
+        <Footer />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

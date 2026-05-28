@@ -14,12 +14,12 @@ const categoryColors = [
 
 export function CategoryChips() {
   return (
-    <div className="flex gap-4 overflow-x-auto pb-2 -mx-2 px-2 lg:mx-0 lg:px-0">
+    <div className="flex gap-4 overflow-x-auto  scrollbar-none pb-2 -mx-2 px-2 lg:mx-0 lg:px-0">
       {categories.map((category, index) => (
         <Link
           key={category.id}
           href={`/categories/${category.id}`}
-          className={`flex flex-col items-center justify-center gap-3 px-4 py-4 rounded-lg bg-gradient-to-br ${categoryColors[index % categoryColors.length]} border border-opacity-50 hover:shadow-lg transition-all duration-300 flex-shrink-0 w-60 h-30 group`}
+          className={`flex flex-col items-center justify-center gap-3 px-4 py-4  rounded-lg bg-gradient-to-br ${categoryColors[index % categoryColors.length]} border border-opacity-50  hover:shadow-lg transition-all duration-300 flex-shrink-0 w-60 h- group`}
         >
           <span className="text-5xl group-hover:scale-110 transition-transform duration-300">{category.icon}</span>
           <span className="text-xs font-semibold text-white text-center line-clamp-2">{category.name}</span>

@@ -1,12 +1,12 @@
 import { Game, Category } from './types'
 
 export const categories: Category[] = [
-  {
-    id: 'io',
-    name: '.IO',
-    icon: '🌐',
-    description: 'IO multiplayer games',
-  },
+  // {
+  //   id: 'io',
+  //   name: '.IO',
+  //   icon: '🌐',
+  //   description: 'IO multiplayer games',
+  // },
   {
     id: '2player',
     name: '2 Player',

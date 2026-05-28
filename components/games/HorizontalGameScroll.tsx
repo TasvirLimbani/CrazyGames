@@ -22,9 +22,6 @@ export function HorizontalGameScroll({ title, games, categoryId, isLoading = fal
                 <h2 className="text-2xl font-bold text-foreground">{title}</h2>
                 {categoryId && (
                     <Link href={`/categories/${categoryId}`}>
-                        {/* <Button variant="ghost" className="text-primary hover:bg-primary/10">
-                            View more <ChevronRight className="w-4 h-4 ml-1" />
-                        </Button> */}
                     </Link>
                 )}
             </div>

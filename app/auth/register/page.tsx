@@ -38,7 +38,7 @@ export default function RegisterPage() {
       {/* Register Card */}
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 text-white font-bold text-2xl mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-lg bg-linear-to-br from-purple-500 to-purple-600 text-white font-bold text-2xl mb-4">
             CG
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Join Crazy Games</h1>
@@ -178,8 +178,8 @@ export default function RegisterPage() {
         {/* Sign In Link */}
         <p className="text-center text-muted-foreground">
           Already have an account?{' '}
-          <Link href="/auth/login" className="text-primary hover:text-accent transition-colors font-semibold">
-            Sign in
+          <Link href="/" className="text-primary hover:text-accent transition-colors font-semibold">
+            Back to home
           </Link>
         </p>
       </div>

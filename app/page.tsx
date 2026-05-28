@@ -1,14 +1,26 @@
-import { Header } from '@/components/layout/Header'
+// Header moved to root layout
 import { SidebarNav } from '@/components/layout/SidebarNav'
 import { CategoryChips } from '@/components/common/CategoryChips'
 import { GamesCategorySection } from '@/components/games/GamesCategorySection'
-import { Button } from '@/components/ui/button'
 
-export default function Home() {
+interface HomePageProps {
+  searchParams: Promise<{
+    filter?: string
+  }>
+}
+
+const filterLabels: Record<string, string> = {
+  hot: 'Hot',
+  top: 'Top Picks',
+  new: 'New Games',
+}
+
+export default async function Home({ searchParams }: HomePageProps) {
+  const { filter = '' } = await searchParams
+  const activeFilterLabel = filterLabels[filter]
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Header />
-
       <div className="flex flex-1">
         <SidebarNav />
 
@@ -23,21 +35,18 @@ export default function Home() {
 
           {/* Main Content - Category Games */}
           <div className="max-w-full px-4 py-3 space-y-3">
+            {activeFilterLabel && (
+              <div className="rounded-2xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+                Showing {activeFilterLabel} games
+              </div>
+            )}
             <GamesCategorySection />
 
-            {/* Call to Action */}
-            <section className="max-w-7xl mx-auto bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-lg p-8 text-center">
-              <h2 className="text-2xl font-bold text-foreground mb-2">Play thousands of games</h2>
-              <p className="text-muted-foreground mb-6">No downloads required. Start playing instantly.</p>
-              <Button className="bg-primary hover:bg-purple-600 text-primary-foreground">
-                Explore All Games
-              </Button>
-            </section>
           </div>
         </main>
-        
+
       </div>
-      
+
     </div>
   )
 }
